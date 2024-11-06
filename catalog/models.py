@@ -77,8 +77,7 @@ class BookInstance(models.Model):
         """
         String for representing the Model object
         """
-        return '%s (%s)' % (self.book.title,self.id)
-
+        return f"{self.book.title} ({self.id})"
     @property
     def is_overdue(self):
         if self.due_back and date.today() > self.due_back:

@@ -157,3 +157,20 @@ class BookDelete(PermissionRequiredMixin, DeleteView):
     model = Book
     success_url = reverse_lazy('books')
     permission_required = 'catalog.delete_book'
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import BookInstance
+
+@login_required
+def change_copy_status(request, pk):
+    copy = get_object_or_404(BookInstance, pk=pk)
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status in dict(copy.LOAN_STATUS):
+            copy.status = new_status
+            copy.save()
+            return redirect('book-detail', pk=copy.book.pk)
+
+    return redirect('book-detail', pk=copy.book.pk)
